@@ -17,8 +17,9 @@ WORKDIR /app
 # Copy the built JAR from build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Expose port (Render uses PORT environment variable)
-EXPOSE 8080
+# Railway provides PORT environment variable
+ENV PORT=8080
+EXPOSE $PORT
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

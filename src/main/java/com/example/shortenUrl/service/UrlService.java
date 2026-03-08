@@ -3,6 +3,7 @@ package com.example.shortenUrl.service;
 import com.example.shortenUrl.entity.UrlMapping;
 import com.example.shortenUrl.repository.UrlMappingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,9 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class UrlService {
 
-    private static final String BASE_URL = "http://localhost:8081/";
+    @Value("${app.base-url}")
+    private String baseUrl;
+
     private static final String BASE62_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     private static final int SHORT_CODE_LENGTH = 7;
     private static final Random RANDOM = new Random();
@@ -41,7 +44,7 @@ public class UrlService {
 
         redisTemplate.opsForValue().set(REDIS_KEY_PREFIX + shortCode, normalizedUrl, REDIS_TTL_HOURS, TimeUnit.HOURS);
 
-        return BASE_URL + shortCode;
+        return baseUrl + "/" + shortCode;
     }
 
     public String getOriginalUrl(String shortCode) {
